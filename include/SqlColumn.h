@@ -33,4 +33,6 @@ public:
     {
         return "SqlColumn";
     }
+
+    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const override { return std::make_shared<SqlColumn>(*this); }
 };

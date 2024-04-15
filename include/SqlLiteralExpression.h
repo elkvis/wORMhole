@@ -22,6 +22,8 @@ public:
 
     virtual std::string ToString() const override { return m_value; }
     virtual std::string GetType() const override { return "SqlLiteralExpression"; }
+
+    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const override { return std::make_shared<SqlLiteralExpression>(*this); }
 };
 
 SqlLiteralExpression operator ""sle(unsigned long long int val)

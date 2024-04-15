@@ -25,7 +25,7 @@ int main()
   auto q = query.Where(((query.age == query.id) && (query.age + query.name > query.id)))
                 .GroupBy(query.name)
                 .OrderBy(query.age, Descending(query.id))
-                .Select(query.age, "Name: "sle + query.name, 3sle, "hello, world!"sle, 3.141592sle);
+                .Select(query.age.Average(), "Name: "sle + query.name, (query.id + query.age).Count(), 3sle, "hello, world!"sle, 3.141592sle);
 
   std::cout << q.ToString() << '\n';
 

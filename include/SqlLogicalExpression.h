@@ -37,8 +37,8 @@ public:
     SqlLogicalExpression(ExpressionType eType, const Expression_T1& lhs, const Expression_T2& rhs) :
         SqlExpression{},
         LogicalExpressionType{eType},
-        m_lhs{std::make_shared<Expression_T1>(lhs)},
-        m_rhs{std::make_shared<Expression_T2>(rhs)}
+        m_lhs{lhs.GetSharedPtrCopy()},
+        m_rhs{rhs.GetSharedPtrCopy()}
     {
     }
     
@@ -69,6 +69,8 @@ public:
     {
         return "SqlLogicalExpression";
     }
+
+    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const override { return std::make_shared<SqlLogicalExpression>(*this); }
 };
 
 template<SqlExpressionConcept Expression_T1, SqlExpressionConcept Expression_T2>

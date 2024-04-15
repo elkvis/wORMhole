@@ -1,7 +1,10 @@
 #pragma once
 
+#include "Sql.h"
 #include <string>
 #include <iostream>
+
+class SqlAggregateExpression;
 
 class SqlExpression
 {
@@ -15,6 +18,17 @@ public:
 
     virtual std::string ToString() const { return {}; };
     virtual std::string GetType() const { return "SqlExpression"; }
+
+    SqlAggregateExpression Sum();
+    SqlAggregateExpression Count();
+    SqlAggregateExpression Average();
+    SqlAggregateExpression GroupConcat(const std::string& separator = ",");
+    SqlAggregateExpression Min();
+    SqlAggregateExpression Max();
+    SqlAggregateExpression StdDev();
+    SqlAggregateExpression Variance();
+
+    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const { return std::make_shared<SqlExpression>(*this); }
 };
 
 template<typename T>

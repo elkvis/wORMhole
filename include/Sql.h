@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "SqlExpression.h"
+#include "SqlAggregateExpression.h"
 #include "SqlArithmeticExpression.h"
 #include "SqlBitwiseExpression.h"
 #include "SqlLogicalExpression.h"

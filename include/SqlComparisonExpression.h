@@ -46,8 +46,8 @@ public:
     SqlComparisonExpression(ExpressionType eType, const Expression_T1& lhs, const Expression_T2& rhs) :
         SqlExpression{},
         ComparisonExpressionType(eType),
-        m_lhs{std::make_shared<Expression_T1>(lhs)},
-        m_rhs{std::make_shared<Expression_T2>(rhs)}
+        m_lhs{lhs.GetSharedPtrCopy()},
+        m_rhs{rhs.GetSharedPtrCopy()}
     {
     }
 
@@ -72,6 +72,8 @@ public:
     {
         return "SqlComparisonExpression";
     }
+    
+    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const override { return std::make_shared<SqlComparisonExpression>(*this); }
 };
 
 template<SqlExpressionConcept Expression_T1, SqlExpressionConcept Expression_T2>

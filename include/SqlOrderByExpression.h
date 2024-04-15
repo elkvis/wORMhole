@@ -11,7 +11,7 @@ public:
     template<SqlExpressionConcept Expression_T>
     SqlOrderByExpression(const Expression_T& expression, bool isDescending = false) :
         SqlExpression{},
-        m_expression{std::make_shared<Expression_T>(expression)},
+        m_expression{expression.GetSharedPtrCopy()},
         m_isDescending(isDescending)
     {
 
@@ -31,6 +31,8 @@ public:
     };
 
     virtual std::string GetType() const { return "SqlOrderByExpression"; }
+
+    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const override { return std::make_shared<SqlOrderByExpression>(*this); }
 };
 
 template<SqlExpressionConcept Expression_T>

@@ -40,8 +40,8 @@ public:
     SqlBitwiseExpression(ExpressionType eType, const Expression_T1& lhs, const Expression_T2& rhs) :
         SqlExpression{},
         BitwiseExpressionType{eType},
-        m_lhs{std::make_shared<Expression_T1>(lhs)},
-        m_rhs{std::make_shared<Expression_T2>(rhs)}
+        m_lhs{lhs.GetSharedPtrCopy()},
+        m_rhs{rhs.GetSharedPtrCopy()}
     {
     }
     
@@ -67,6 +67,8 @@ public:
     {
         return "SqlBitwiseExpression";
     }
+
+    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const override { return std::make_shared<SqlBitwiseExpression>(*this); }
 };
 
 template<SqlExpressionConcept Expression_T1, SqlExpressionConcept Expression_T2>
