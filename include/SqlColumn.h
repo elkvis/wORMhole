@@ -5,7 +5,7 @@
 #include <optional>
 #include <utility>
 
-template<typename Value_T, typename Table_T>
+template<typename Value_T, typename Table_T, typename = std::enable_if_t<std::is_base_of_v<SqlTable, Table_T>>>
 class SqlColumn : public SqlExpression
 {
     static_assert(std::is_base_of_v<SqlTable, Table_T>);
@@ -16,7 +16,14 @@ public:
     {
 
     }
+    
+    SqlColumn() = default;
+    SqlColumn(const SqlColumn&) = default;
+    SqlColumn(SqlColumn&&) = default;
+    SqlColumn& operator=(const SqlColumn&) = default;
+    SqlColumn& operator=(SqlColumn&&) = default;
     virtual ~SqlColumn() = default;
+
     inline virtual constexpr std::string ToString() const override
     {
         return Table_T{}.TableName() + '.' + m_name;

@@ -14,6 +14,8 @@ struct Table1Query : public SqlQuery<Table1>
   SqlColumn<int, Table1> id{"id"};
   SqlColumn<std::string, Table1> name{"name"};
   SqlColumn<int, Table1> age{"age"};
+
+  std::vector<const SqlExpression*> Columns = {&id, &name, &age};
 };
 
 int main()
@@ -22,7 +24,7 @@ int main()
 
   auto q = query.Where(((query.age == query.id) && (query.age + query.name > query.id)))
                 .GroupBy(query.name)
-                .OrderBy(query.age)
+                .OrderBy(query.age, Descending(query.id))
                 .Select(query.age, "Name: "sle + query.name, 3sle, "hello, world!"sle, 3.141592sle);
 
   std::cout << q.ToString() << '\n';
