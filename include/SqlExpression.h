@@ -19,14 +19,14 @@ public:
     virtual std::string ToString() const { return {}; };
     virtual std::string GetType() const { return "SqlExpression"; }
 
-    SqlAggregateExpression Sum();
-    SqlAggregateExpression Count();
-    SqlAggregateExpression Average();
-    SqlAggregateExpression GroupConcat(const std::string& separator = ",");
-    SqlAggregateExpression Min();
-    SqlAggregateExpression Max();
-    SqlAggregateExpression StdDev();
-    SqlAggregateExpression Variance();
+    inline SqlAggregateExpression Sum();
+    inline SqlAggregateExpression Count();
+    inline SqlAggregateExpression Average();
+    inline SqlAggregateExpression GroupConcat(const std::string& separator = ",");
+    inline SqlAggregateExpression Min();
+    inline SqlAggregateExpression Max();
+    inline SqlAggregateExpression StdDev();
+    inline SqlAggregateExpression Variance();
 
     virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const { return std::make_shared<SqlExpression>(*this); }
 };
