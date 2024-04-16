@@ -4,38 +4,41 @@
 #include <string>
 #include <iostream>
 
-class SqlAggregateExpression;
-
-class SqlExpression
+namespace wORMhole
 {
-public:
-    SqlExpression() = default;
-    SqlExpression(const SqlExpression&) = default;
-    SqlExpression(SqlExpression&&) = default;
-    SqlExpression& operator=(const SqlExpression&) = default;
-    SqlExpression& operator=(SqlExpression&&) = default;
-    virtual ~SqlExpression() = default;
+    class SqlAggregateExpression;
 
-    virtual std::string ToString() const { return {}; };
-    virtual std::string GetType() const { return "SqlExpression"; }
+    class SqlExpression
+    {
+    public:
+        SqlExpression() = default;
+        SqlExpression(const SqlExpression&) = default;
+        SqlExpression(SqlExpression&&) = default;
+        SqlExpression& operator=(const SqlExpression&) = default;
+        SqlExpression& operator=(SqlExpression&&) = default;
+        virtual ~SqlExpression() = default;
 
-    inline SqlAggregateExpression Sum();
-    inline SqlAggregateExpression Count();
-    inline SqlAggregateExpression Average();
-    inline SqlAggregateExpression GroupConcat(const std::string& separator = ",");
-    inline SqlAggregateExpression Min();
-    inline SqlAggregateExpression Max();
-    inline SqlAggregateExpression StdDev();
-    inline SqlAggregateExpression Variance();
+        virtual std::string ToString() const { return {}; };
+        virtual std::string GetType() const { return "SqlExpression"; }
 
-    virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const { return std::make_shared<SqlExpression>(*this); }
-};
+        inline SqlAggregateExpression Sum();
+        inline SqlAggregateExpression Count();
+        inline SqlAggregateExpression Average();
+        inline SqlAggregateExpression GroupConcat(const std::string& separator = ",");
+        inline SqlAggregateExpression Min();
+        inline SqlAggregateExpression Max();
+        inline SqlAggregateExpression StdDev();
+        inline SqlAggregateExpression Variance();
 
-template<typename T>
-concept SqlExpressionConcept = std::is_base_of<SqlExpression, T>::value;
+        virtual std::shared_ptr<SqlExpression> GetSharedPtrCopy() const { return std::make_shared<SqlExpression>(*this); }
+    };
 
-std::ostream& operator<<(std::ostream& os, const SqlExpression& exp)
-{
-    os << exp.ToString();
-    return os;
+    template<typename T>
+    concept SqlExpressionConcept = std::is_base_of<SqlExpression, T>::value;
+
+    std::ostream& operator<<(std::ostream& os, const SqlExpression& exp)
+    {
+        os << exp.ToString();
+        return os;
+    }
 }

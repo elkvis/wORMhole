@@ -2,8 +2,11 @@
 
 #include <optional>
 
-template <typename ValueT>
-class SqlValue
+namespace wORMhole
 {
-    std::optional<ValueT> m_value;
-};
+    template <typename ValueT>
+    class SqlValue
+    {
+        std::optional<ValueT> m_value;
+    };
+}

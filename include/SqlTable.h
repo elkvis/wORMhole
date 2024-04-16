@@ -2,10 +2,13 @@
 
 #include <string>
 
-class SqlTable
+namespace wORMhole
 {
-private:
-public:
-    virtual ~SqlTable() = default;
-    constexpr virtual std::string TableName() const = 0;
-};
+    class SqlTable
+    {
+    private:
+    public:
+        virtual ~SqlTable() = default;
+        constexpr virtual std::string TableName() const = 0;
+    };
+}
