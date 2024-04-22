@@ -18,6 +18,10 @@ namespace wORMhole
         std::vector<std::shared_ptr<SqlExpression>> m_selectExpression;
 
     public:
+        virtual ~SqlQuery() = default;
+
+        virtual const std::vector<const wORMhole::SqlExpression*>& GetColumns() const = 0;
+
         template<SqlExpressionConcept Expression_T>
         SqlQuery& Where(const Expression_T& sqlExpression)
         {
@@ -61,10 +65,21 @@ namespace wORMhole
             std::ostringstream oss;
 
             oss << "SELECT ";
-            for (auto [i, exp] : m_selectExpression | std::views::enumerate)
+            if (m_selectExpression.empty())
             {
-                if (i) oss << ", ";
-                oss << exp->ToString();
+                for (auto [i, exp] : GetColumns() | std::views::enumerate)
+                {
+                    if (i) oss << ", ";
+                    oss << exp->ToString();
+                }
+            }
+            else
+            {
+                for (auto [i, exp] : m_selectExpression | std::views::enumerate)
+                {
+                    if (i) oss << ", ";
+                    oss << exp->ToString();
+                }
             }
             oss << '\n';
 
