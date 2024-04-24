@@ -16,6 +16,10 @@ namespace wORMhole
         std::vector<std::shared_ptr<SqlExpression>> m_groupByExpression;
         std::vector<std::shared_ptr<SqlExpression>> m_orderByExpression;
         std::vector<std::shared_ptr<SqlExpression>> m_selectExpression;
+        bool m_isDelete = false;
+        bool m_isExplain = false;
+        std::optional<std::size_t> m_limitRows;
+        std::optional<std::size_t> m_skipRows;
 
     public:
         virtual ~SqlQuery() = default;
@@ -53,6 +57,7 @@ namespace wORMhole
         template<SqlExpressionConcept... Args>
         SqlQuery& Select(Args... args)
         {
+            m_isDelete = false;
             using expander = std::vector<int>;
             (void)expander {
                 0, (void(m_selectExpression.push_back(std::make_unique<Args>(args))), 0)...
@@ -60,32 +65,63 @@ namespace wORMhole
             return *this;
         }
 
+        SqlQuery& Explain()
+        {
+            m_isExplain = true;
+            return *this;
+        }
+
+        SqlQuery& Delete()
+        {
+            m_isDelete = true;
+            return *this;
+        }
+
+        SqlQuery& Limit(std::size_t numRows, std::size_t skipRows = 0)
+        {
+            m_limitRows = numRows;
+            m_skipRows = skipRows;
+            return *this;
+        }
+
         std::string ToString() const
         {
             std::ostringstream oss;
 
-            oss << "SELECT ";
-            if (m_selectExpression.empty())
+            if (m_isExplain)
             {
-                for (auto [i, exp] : GetColumns() | std::views::enumerate)
-                {
-                    if (i) oss << ", ";
-                    oss << exp->ToString();
-                }
+                oss << "EXPLAIN\n";
+            }
+
+            if (m_isDelete)
+            {
+                oss << "DELETE";
             }
             else
             {
-                for (auto [i, exp] : m_selectExpression | std::views::enumerate)
+                oss << "SELECT ";
+                if (m_selectExpression.empty())
                 {
-                    if (i) oss << ", ";
-                    oss << exp->ToString();
+                    for (auto [i, exp] : GetColumns() | std::views::enumerate)
+                    {
+                        if (i) oss << ", ";
+                        oss << exp->ToString();
+                    }
+                }
+                else
+                {
+                    for (auto [i, exp] : m_selectExpression | std::views::enumerate)
+                    {
+                        if (i) oss << ", ";
+                        oss << exp->ToString();
+                    }
                 }
             }
             oss << '\n';
 
             oss << "FROM " << Table_T{}.TableName() << "\nWHERE " << m_whereExpression->ToString() << '\n';
 
-            if (!m_orderByExpression.empty())
+            if (!m_orderByExpression.empty() && !m_isDelete)
             {
                 oss << "ORDER BY ";
                 for (auto [i, exp] : m_orderByExpression | std::views::enumerate)
@@ -96,7 +132,7 @@ namespace wORMhole
                 oss << '\n';
             }
 
-            if (!m_groupByExpression.empty())
+            if (!m_groupByExpression.empty() && !m_isDelete)
             {
                 oss << "GROUP BY ";
                 for (auto [i, exp] : m_groupByExpression | std::views::enumerate)
@@ -107,6 +143,16 @@ namespace wORMhole
                 oss << '\n';
             }
 
+            if (m_limitRows)
+            {
+                oss << "LIMIT ";
+                if (m_skipRows)
+                {
+                    oss << m_skipRows.value() << ", ";
+                }
+                oss << m_limitRows.value();
+                oss << '\n';
+            }
 
             return oss.str();
         }

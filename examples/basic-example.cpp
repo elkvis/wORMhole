@@ -80,7 +80,10 @@ int main()
 
   countryQuery cQuery;
   auto& q2 = cQuery.Where(cQuery.GNP > 1e+12sle)
-                   .OrderBy(wORMhole::Descending(cQuery.GNP));
+                   .OrderBy(wORMhole::Descending(cQuery.GNP))
+                   .Delete()
+                   .Limit(10, 35)
+                   .Explain();
 
   std::cout << q2.ToString() << '\n';
 
