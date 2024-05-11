@@ -24,7 +24,7 @@ TODO: replace data types with their C++ equivalents.  Currently using the editor
 
 struct city : public wORMhole::SqlTable
 {
-  constexpr virtual std::string TableName() const override { return "country"; }
+  constexpr virtual std::string TableName() const override { return "city"; }
 
   wORMhole::SqlValue<int> ID;
   wORMhole::SqlValue<std::string> Name;
@@ -92,7 +92,7 @@ struct countryQuery : public wORMhole::SqlQuery<country>
 
 struct countrylanguage : public wORMhole::SqlTable
 {
-  constexpr virtual std::string TableName() const override { return "country"; }
+  constexpr virtual std::string TableName() const override { return "countrylanguage"; }
 
   wORMhole::SqlValue<std::string> CountryCode;
   wORMhole::SqlValue<std::string> Language;

@@ -33,12 +33,19 @@ int main()
 
   std::cout << q.ToString() << '\n';
 
-  countryQuery cQuery;
-  auto& q2 = cQuery.Where(cQuery.GNP > 1e+12sle)
-                   .OrderBy(wORMhole::Descending(cQuery.GNP))
-                   .Delete()
-                   .Limit(10, 35)
-                   .Explain();
+  countryQuery coQuery;
+  cityQuery citQuery;
+  countrylanguageQuery clQuery;
+
+
+  auto& q2 = coQuery.Where(coQuery.GNP > 1e+12sle)
+                    .InnerJoin(citQuery, citQuery.CountryCode == coQuery.Code)
+                    .LeftOuterJoin(clQuery, clQuery.CountryCode == coQuery.Code)
+                    .OrderBy(wORMhole::Descending(coQuery.GNP))
+                    .Delete()
+                    .Limit(10, 35)
+                    .Having(coQuery.LifeExpectancy > 35sle)
+                    .Explain();
 
   std::cout << q2.ToString() << '\n';
 
